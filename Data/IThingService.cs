@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using DeviceRegistry.DTOs;
 
-namespace ReactAppSample.Data
+namespace DeviceRegistry.Data
 {
     // Provides asynchronous methods to perform operations
     // on the Things DbSet collection. 
