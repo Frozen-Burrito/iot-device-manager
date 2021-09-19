@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using DeviceRegistry.Helpers;
 using DeviceRegistry.Data;
 
 namespace DeviceRegistry
@@ -25,22 +27,23 @@ namespace DeviceRegistry
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
 
+            // Setup database services.
             services.AddDbContext<DataContext>(options =>
             {
                 var connectionStr = Configuration.GetConnectionString("DatabasePath");
 
                 if (Environment.IsDevelopment())
-                {
                     options.UseSqlite(connectionStr);
-                } 
                 else 
-                {
                     options.UseSqlServer(connectionStr);
-                }
             });
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            // Application services
+            services.AddScoped<IThingService, RelationalThingRepository>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
