@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DeviceRegistry.Api.Controllers</name>
+    </assembly>
+    <members>
+        <member name="T:DeviceRegistry.Controllers.ThingsController">
+            <summary>
+                The <c>ThingsController</c> allows the client (the SPA in this project) to perform actions on the <c>Thing</c> resource. The url for this controller is <c>/api/things</c>. Subroutes support <c>GET</c>, <c>POST</c> and <c>DELTE</c> verbs.
+            </summary>
+        </member>
+        <member name="M:DeviceRegistry.Controllers.ThingsController.ThingsController">
+            <summary>
+                Creates a new instance of the <c>ThingsController</c> class and receives a <c>logger</c> service and an <c>IThingService</c> via dependency injection.
+            </summary>
+            <param name="logger">An instance of <c>ILogger</c> for the controller.</param>
+            <param name="thingService">An instance of <c>IThingService</c>, used for the data access operations.</param>
+        </member>
+        <member name="M:DeviceRegistry.Controllers.ThingsController.GetThings">
+            <summary>
+                <c>GET - api/things</c>
+                Returns a <c>List</c> containing all existing <c>Thing</c> objects in the <c>Things</c> collection.
+            </summary>
+            <returns>List of all <c>Things</c>.</returns>
+        </member>
+        <member name="M:DeviceRegistry.Controllers.ThingsController.GetThingByIdentifier(string identifier)">
+            <summary>
+                <c>GET - api/things/{identifier}</c>
+                Searches the <c>Thing</c> collection for an instance with the given <c>identifier</c>. Returns a <c>404 Not Found</c> if no such <c>Thing</c> exists.
+            </summary>
+            <param name="identifier">A unique <c>string</c> that identifies a <c>Thing</c>.</param>
+            <returns>A <c>Thing</c> with the given <c>identifier</c></returns>
+            <returns>A <c>NotFoundResult</c>, if there is no <c>Thing</c> with a matching <c>identifier</c>.</returns>
+        </member>
+        <member name="M:DeviceRegistry.Controllers.ThingsController.CreateThing(ThingDTO newThing)">
+            <summary>
+                <c>POST - api/things</c>
+                Receives a <c>Thing</c> object in the request body and adds it to the database collection after successful model validation. 
+            </summary>
+            <param name="newThing">An object of type <c>ThingDTO</c>, containing the data to be saved to the collection.</param>
+            <returns>A <c>CreatedAtResult</c> with the produced <c>identifier</c> to signal that the operation was successful.</returns>
+        </member>
+        <member name="M:DeviceRegistry.Controllers.ThingsController.DeleteThing(string identifier)">
+            <summary>
+                <c>DELETE - api/things/{identifier}</c>
+                Searches the <c>Thing</c> collection for an instance with the given <c>identifier</c> and then deletes it. Returns a <c>404 Not Found</c> if no such <c>Thing</c> exists.
+            </summary>
+            <param name="identifier">A unique <c>string</c> that identifies a <c>Thing</c>.</param>
+            <returns>A <c>NoContentResult</c>, meaning that the delete operation was successful.</returns>
+            <returns>A <c>NotFoundResult</c>, if there is no <c>Thing</c> with a matching <c>identifier</c>.</returns>
+        </member>
+    </members>
+</doc>
