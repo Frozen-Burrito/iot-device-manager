@@ -40,6 +40,7 @@ namespace DeviceRegistry
                     options.UseSqlServer(connectionStr);
             });
 
+            services.AddCors();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // Application services
@@ -67,16 +68,20 @@ namespace DeviceRegistry
             }
 
             app.UseHttpsRedirection();
+            
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
             app.UseRouting();
 
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "api/{controller}/{action=Index}/{id?}");
+                endpoints.MapControllers();
+                // endpoints.MapControllerRoute(
+                //     name: "default",
+                //     pattern: "api/{controller}/{action=Index}/{id?}");
             });
 
             app.UseSpa(spa =>
