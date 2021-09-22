@@ -18,6 +18,8 @@ namespace DeviceRegistry.Controllers
     /// <include file='../Docs/Controllers/ThingsController.xml' path='/doc/members/member[@name="T:DeviceRegistry.Controllers.ThingsController"]/*'/>
     [Controller]
     [Route("api/[controller]")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
     public class ThingsController : ControllerBase
     {
         private readonly ILogger<ThingsController> _log;
@@ -52,7 +54,7 @@ namespace DeviceRegistry.Controllers
         // Searches the Thing collection for an instance with the 
         // given identifier. Returns a 404 Not Found if no such Thing exists.
         /// <include file='../Docs/Controllers/ThingsController.xml' path='/doc/members/member[@name="M:DeviceRegistry.Controllers.ThingsController.GetThingByIdentifier(string identifier)"]/*'/>
-        [HttpGet("{identifier:string}")]
+        [HttpGet("{identifier}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ThingDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetThingByIdentifier(string identifier)
@@ -78,15 +80,15 @@ namespace DeviceRegistry.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ThingDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateThing(ThingDTO newThing)
+        public async Task<IActionResult> CreateThing([FromBody] ThingDTO newThing)
         {
             string msg = $"{DateTime.UtcNow.ToLongDateString()} - POST api/things";
             _log.LogInformation(msg);
 
             if (!ModelState.IsValid) 
             {
-                // Temporary response status code.
-                return BadRequest();
+                _log.LogWarning("Model validation failed.");
+                return BadRequest(ModelState.Values);
             }
 
             await _thingService.CreateThingAsync(newThing);
@@ -103,12 +105,12 @@ namespace DeviceRegistry.Controllers
         // given identifier and then deletes it. Returns a 404 Not Found 
         // if no such Thing exists.
         /// <include file='../Docs/Controllers/ThingsController.xml' path='/doc/members/member[@name="M:DeviceRegistry.Controllers.ThingsController.DeleteThing(string identifier)"]/*'/>
-        [HttpDelete]
+        [HttpDelete("{identifier}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteThing(string identifier)
         {
-            string msg = $"{DateTime.UtcNow.ToLongDateString()} - GET api/things/{identifier}";
+            string msg = $"{DateTime.UtcNow.ToLongDateString()} - DELETE api/things/{identifier}";
             _log.LogInformation(msg);
 
             try
