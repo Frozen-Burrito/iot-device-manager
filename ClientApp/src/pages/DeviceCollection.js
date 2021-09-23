@@ -85,7 +85,7 @@ export class DeviceCollection extends Component {
 
     return (
       <div>
-        <h1 id="tabelLabel" >Your Things</h1>
+        <h1>Your Things</h1>
         <p>Here you can view, edit and manage all your intelligent devices.</p>
 
         <DeviceFilter 
