@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Spinner, Row } from 'react-bootstrap';
 import { DeviceCard } from '../components/DeviceCard';
 import { DeviceFilter } from '../components/DeviceFilter';
+import { CustomModal } from '../components/CustomModal';
 
 export class DeviceCollection extends Component {
   static displayName = DeviceCollection.name;
@@ -16,6 +17,8 @@ export class DeviceCollection extends Component {
         searchQuery: '',
         isGridView: true, 
       },
+      displayDeleteModal: false,
+      selectedDeviceId: '',
 
       loading: false 
     };
@@ -23,6 +26,9 @@ export class DeviceCollection extends Component {
     this.renderThingCollection = this.renderThingCollection.bind(this);
     this.handleQueryChange = this.handleQueryChange.bind(this);
     this.handleLayoutToggle = this.handleLayoutToggle.bind(this);
+
+    this.handleDeleteModalDisplay = this.handleDeleteModalDisplay.bind(this);
+    this.handleDeleteModalAccept = this.handleDeleteModalAccept.bind(this);
   }
 
   componentDidMount() {
@@ -54,6 +60,31 @@ export class DeviceCollection extends Component {
     }));
   }
 
+  handleDeleteModalDisplay(show, identifier = '') {
+		this.setState((state, _) => ({
+      selectedDeviceId: identifier,
+			displayDeleteModal: show
+		}));
+	}
+
+	async handleDeleteModalAccept() {
+		console.log('Removal was confirmed.');
+    const { selectedDeviceId: identifier } = this.state;
+
+		this.handleDeleteModalDisplay(false);
+
+		try {
+			await axios.delete(`api/things/${identifier}`);
+      
+      this.setState((state, _) => ({
+        things: state.things.filter(thing => thing.identifier !== identifier)
+      }));
+
+		} catch (error) {
+			console.log('Can\'t delete, an error was raised: ', error);
+		}
+	}
+
   renderThingCollection() {
 
     const { 
@@ -69,7 +100,10 @@ export class DeviceCollection extends Component {
     return (
       <Row xs={1} md={ isGridView ? 3 : 1 } className="g-3">
         {filteredList.map(thing =>
-          <DeviceCard key={ thing.identifier } thing={ thing } />
+          <DeviceCard 
+            key={ thing.identifier } 
+            thing={ thing } 
+            onDeleteAction={ () => this.handleDeleteModalDisplay(true, thing.identifier) }/>
         )}
       </Row>
     );
@@ -77,7 +111,17 @@ export class DeviceCollection extends Component {
 
   render() {
 
-    const { loading, filters } = this.state;
+    const { loading, filters, displayDeleteModal, things } = this.state;
+
+    const selectedDevice = 
+      things.find(t => t.identifier === this.state.selectedDeviceId);
+
+    const deleteModalData = {
+			title: `Remove ${selectedDevice ? selectedDevice.name : 'unknown device'}?`,
+			body: 'If you confirm this action, the device will be deleted permanently from the collection.',
+			action: 'Remove',
+			actionColor: 'danger',
+		}
 
     let content = loading
       ? <Spinner color="dark" />
@@ -96,6 +140,13 @@ export class DeviceCollection extends Component {
         <hr/>  
 
         {content}
+
+        <CustomModal
+          show={ displayDeleteModal }
+          data={ deleteModalData }
+          onAcceptModal={ this.handleDeleteModalAccept } 
+					onCloseModal={ () => this.handleDeleteModalDisplay(false) }
+        />
       </div>
     );
   }

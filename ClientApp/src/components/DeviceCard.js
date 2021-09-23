@@ -10,6 +10,12 @@ export class DeviceCard extends Component {
     this.state = {
       thing: this.props.thing
     };
+
+    this.handleDeleteAction = this.handleDeleteAction.bind(this);
+  }
+
+  handleDeleteAction(e) {
+    this.props.onDeleteAction();
   }
 
   render() {
@@ -30,8 +36,8 @@ export class DeviceCard extends Component {
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={e => console.log("Edit")}>Edit</Dropdown.Item>
-                    <Dropdown.Item onClick={e => console.log("Remove")}>Remove</Dropdown.Item>
+                    <Dropdown.Item onClick={ e => console.log("Edit") }>Edit</Dropdown.Item>
+                    <Dropdown.Item onClick={ this.handleDeleteAction }>Remove</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </Stack>
@@ -46,7 +52,7 @@ export class DeviceCard extends Component {
               )}
             </Stack>
 
-            <Card.Text>
+            <Card.Text style={{ minHeight: 96 }}>
               {thing.shortDescription.length > 130 
                 ? thing.shortDescription.substr(0, 130) + "..."
                 : thing.shortDescription

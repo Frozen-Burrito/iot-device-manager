@@ -118,7 +118,7 @@ export class AddDevice extends Component {
           <Form.Select aria-label="Select the type of device">
             <option>None</option>
             { deviceTypes.map((deviceType, i) => 
-              <option value={i}>
+              <option key={deviceType} value={i}>
                 { deviceType.replace(/^\w/, (c) => c.toUpperCase()) }
               </option>
             )}

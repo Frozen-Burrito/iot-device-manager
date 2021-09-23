@@ -1,5 +1,5 @@
-import axios from 'axios';
 import React, { Component } from 'react';
+import axios from 'axios';
 import { Row, Col, Stack, Badge, Button } from 'react-bootstrap';
 
 import { CustomModal } from '../components/CustomModal';
@@ -101,9 +101,19 @@ export class DeviceDetails extends Component {
 		}));
 	}
 
-	handleDeleteModalAccept() {
+	async handleDeleteModalAccept() {
 		console.log('Removal was confirmed.');
+		const { identifier } = this.state.thing;
+
 		this.handleDeleteModalDisplay(false);
+
+		try {
+			await axios.delete(`api/things/${identifier}`);
+			this.props.history.push('/devices');
+
+		} catch (error) {
+			console.log('Can\'t delete, an error was raised: ', error);
+		}
 	}
 
 	render() {
