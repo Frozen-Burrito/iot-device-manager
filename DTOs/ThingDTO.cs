@@ -11,7 +11,7 @@ namespace DeviceRegistry.DTOs
         public string Identifier { get; set; }
 
         [Required]
-        [MaxLength(100)]
+        [MaxLength(50)]
         public string Name { get; set; }
         public string Labels { get; set; }
 
