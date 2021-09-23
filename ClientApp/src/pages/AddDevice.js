@@ -115,7 +115,7 @@ export class AddDevice extends Component {
 
         <Form.Group className="mb-3">
           <Form.Label>Type of Device</Form.Label>
-          <Form.Select aria-selected="Type">
+          <Form.Select aria-label="Select the type of device">
             <option>None</option>
             { deviceTypes.map((deviceType, i) => 
               <option value={i}>

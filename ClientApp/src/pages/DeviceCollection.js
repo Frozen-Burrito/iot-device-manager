@@ -38,7 +38,7 @@ export class DeviceCollection extends Component {
   }
 
   handleQueryChange(queryStr) {
-    this.setState((state, _) => ({ 
+    this.setState((state, _) => ({
       filters: { 
         ...state.filters,
         searchQuery: queryStr 

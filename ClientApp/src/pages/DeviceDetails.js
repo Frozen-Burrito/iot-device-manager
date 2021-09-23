@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { Row, Col, Stack, Badge, Button } from 'react-bootstrap';
 
+import { CustomModal } from '../components/CustomModal';
+
 export class DeviceDetails extends Component {
 	static displayName = DeviceDetails.name;
 
@@ -9,9 +11,14 @@ export class DeviceDetails extends Component {
 		super(props);
 		this.state = {
 			thing: {},
+			showDeleteModal: false,
 			loading: true,
 			error: null
 		}
+
+		this.renderThingDetails = this.renderThingDetails.bind(this);
+		this.handleDeleteModalDisplay = this.handleDeleteModalDisplay.bind(this);
+		this.handleDeleteModalAccept = this.handleDeleteModalAccept.bind(this);
 	}
 
 	componentDidMount() {
@@ -76,7 +83,7 @@ export class DeviceDetails extends Component {
 							<i className="bi bi-sliders"></i>
 						</Button>
 
-						<Button variant="danger">
+						<Button variant="danger" onClick={ e => this.handleDeleteModalDisplay(true) }>
 							<i className="bi bi-x"></i>
 							Remove Device
 						</Button>
@@ -88,9 +95,27 @@ export class DeviceDetails extends Component {
 		);
 	}
 
+	handleDeleteModalDisplay(show) {
+		this.setState((state, _) => ({
+			showDeleteModal: show
+		}));
+	}
+
+	handleDeleteModalAccept() {
+		console.log('Removal was confirmed.');
+		this.handleDeleteModalDisplay(false);
+	}
+
 	render() {
 
-		const { loading } = this.state;
+		const { loading, showDeleteModal } = this.state;
+
+		const deleteModalData = {
+			title: `Remove ${this.state.thing.name}?`,
+			body: 'If you confirm this action, the device will be deleted permanently from the collection.',
+			action: 'Remove',
+			actionColor: 'danger',
+		}
 
 		let thingDetails = loading 
 			? <h1>Loading</h1>
@@ -108,6 +133,12 @@ export class DeviceDetails extends Component {
 						<p className="fs-5">There is no data available right now.</p>
 					</div>
 				</div>
+
+				<CustomModal 
+					show={ showDeleteModal } 
+					data={ deleteModalData } 
+					onAcceptModal={ this.handleDeleteModalAccept } 
+					onCloseModal={ () => this.handleDeleteModalDisplay(false) }/>
 			</div>
 		);
 	}
