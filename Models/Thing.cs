@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DeviceRegistry.Models
 {
@@ -14,6 +15,7 @@ namespace DeviceRegistry.Models
     public class Thing
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Identifier { get; set; }
 
         [Required]
