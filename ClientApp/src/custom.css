@@ -12,3 +12,18 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+.home-banner {
+  display: flex;
+  background: linear-gradient(
+    to top,
+        rgba(0,0,0, 0.7),
+        rgba(0,0,0, 0.7)
+    ), 
+    url(./img/homePage.jpg) center;
+
+  background-size: cover;
+  min-height: 90vh;
+  align-items: center;
+  justify-content: center;
+}

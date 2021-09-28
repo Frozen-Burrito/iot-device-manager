@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Row, Col, Stack, Badge, Button } from 'react-bootstrap';
+import { Row, Col, Stack, Badge, Button, Container } from 'react-bootstrap';
 
 import { CustomModal } from '../components/CustomModal';
 
@@ -132,24 +132,26 @@ export class DeviceDetails extends Component {
 			: this.renderThingDetails();
 
 		return (
-			<div className="mt-4">
-				{ thingDetails }
+			<Container>
+				<div className="mt-4">
+					{ thingDetails }
 
-				<div>
-					<h3>Data</h3>
+					<div>
+						<h3>Data</h3>
 
-					<div className="text-center my-5">
-						<i className="bi bi-cloud-lightning fs-2"></i>
-						<p className="fs-5">There is no data available right now.</p>
+						<div className="text-center my-5">
+							<i className="bi bi-cloud-lightning fs-2"></i>
+							<p className="fs-5">There is no data available right now.</p>
+						</div>
 					</div>
-				</div>
 
-				<CustomModal 
-					show={ showDeleteModal } 
-					data={ deleteModalData } 
-					onAcceptModal={ this.handleDeleteModalAccept } 
-					onCloseModal={ () => this.handleDeleteModalDisplay(false) }/>
-			</div>
+					<CustomModal 
+						show={ showDeleteModal } 
+						data={ deleteModalData } 
+						onAcceptModal={ this.handleDeleteModalAccept } 
+						onCloseModal={ () => this.handleDeleteModalDisplay(false) }/>
+				</div>
+			</Container>
 		);
 	}
 }

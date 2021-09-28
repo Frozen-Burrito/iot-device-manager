@@ -23,7 +23,7 @@ export class NavMenu extends Component {
 
   render () {
     return (
-      <Navbar className="box-shadow mb-3" bg="dark" variant="dark">
+      <Navbar className="box-shadow" bg="dark" variant="dark">
         <Container>
           <Navbar.Brand as={Link} to="/">Device Registry</Navbar.Brand>
           <Navbar.Toggle aria-controls="navbar-content" className="mr-2" />

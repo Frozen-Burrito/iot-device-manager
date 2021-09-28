@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Spinner, Row } from 'react-bootstrap';
+import { Spinner, Row, Container } from 'react-bootstrap';
 import { DeviceCard } from '../components/DeviceCard';
 import { DeviceFilter } from '../components/DeviceFilter';
 import { CustomModal } from '../components/CustomModal';
@@ -128,7 +128,7 @@ export class DeviceCollection extends Component {
       : this.renderThingCollection();
 
     return (
-      <div>
+      <Container>
         <h1>Your Things</h1>
         <p>Here you can view, edit and manage all your intelligent devices.</p>
 
@@ -147,7 +147,7 @@ export class DeviceCollection extends Component {
           onAcceptModal={ this.handleDeleteModalAccept } 
 					onCloseModal={ () => this.handleDeleteModalDisplay(false) }
         />
-      </div>
+      </Container>
     );
   }
 }

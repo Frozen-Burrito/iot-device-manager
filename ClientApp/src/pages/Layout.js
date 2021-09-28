@@ -9,12 +9,11 @@ export class Layout extends Component {
     return (
       <div>
         <NavMenu />
-        <Container>
-          {this.props.children}
-        </Container>
+        
+        {this.props.children}
 
-        <Container fluid className="mt-5 py-3 bg-light text-dark text-center">
-          Built by FrozenBurrito
+        <Container fluid className="py-3 bg-light text-dark text-center">
+          Built by <a href="https://github.com/Frozen-Burrito">FrozenBurrito</a>
         </Container>
       </div>
     );

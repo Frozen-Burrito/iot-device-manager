@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Container } from 'react-bootstrap';
 
 export class AddDevice extends Component {
   static displayName = AddDevice.name;
@@ -144,11 +144,11 @@ export class AddDevice extends Component {
     let content = this.renderAddForm();
 
     return (
-      <div>
+      <Container>
         <h1 id="tabelLabel">Add a Device</h1>
         <p>Specify the details of the device and click 'Save'.</p>
         { content }
-      </div>
+      </Container>
     );
   }
 
