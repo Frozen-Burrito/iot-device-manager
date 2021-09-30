@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -31,5 +31,7 @@ namespace DeviceRegistry.Models
 
         [Required]
         public string IPAddress { get; set; }
+
+        public List<Variable> Variables { get; set; }
     }
 }
