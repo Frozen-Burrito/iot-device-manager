@@ -31,5 +31,20 @@ namespace DeviceRegistry.Data
         // throw not found exception.
         /// <include file='../Docs/Data/IThingService.xml' path='/doc/members/member[@name="T:DeviceRegistry.Data.IThingService.DeleteThingAsync(string identifier)"]/*'/>
         Task DeleteThingAsync(string identifier);
+
+        //TODO: Documentation 
+        // Search the Thing collection for an instance with the 
+        // given identifier. Return the list of variables associated 
+        // with the Thing.
+        Task<List<VariableDTO>> GetThingVariablesAsync(string identifier);
+
+        // Receive a new Variable object, add it to the DbSet and
+        // save changes to the database.
+        Task AddVariableAsync(VariableDTO variableDTO);
+
+        // Search the Variable collection for an instance with the 
+        // given identifier. Remove the Variable object if found, otherwise
+        // throw not found exception.
+        Task DeleteVariableAsync(Guid varId);
     }
 }

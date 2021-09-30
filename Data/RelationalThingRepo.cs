@@ -57,5 +57,38 @@ namespace DeviceRegistry.Data
 
             return things.ToListAsync();
         }
+
+        async Task<List<VariableDTO>> IThingService.GetThingVariablesAsync(string identifier)
+        {
+            var thing = await _context.Things.FindAsync(identifier);
+
+            if (thing is null)
+                throw new KeyNotFoundException("No Thing with given identifier found.");
+
+            var variables = await _context.Variables
+                .Select(v => _mapper.Map<VariableDTO>(v))
+                .Where(v => v.ThingId == identifier)
+                .ToListAsync();
+
+            return variables;
+        }
+
+        async Task IThingService.AddVariableAsync(VariableDTO variableDTO)
+        {
+            var variable = _mapper.Map<Variable>(variableDTO);
+            _context.Variables.Add(variable);
+            await _context.SaveChangesAsync();
+        }
+
+        async Task IThingService.DeleteVariableAsync(Guid variableId)
+        {
+            var variable = await _context.Variables.FindAsync(variableId);
+
+            if (variable is null)
+                throw new KeyNotFoundException("No Variable with given identifier found.");
+
+            _context.Variables.Remove(variable);
+            await _context.SaveChangesAsync();
+        }
     }
 }
