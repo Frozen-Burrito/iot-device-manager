@@ -40,7 +40,7 @@ namespace DeviceRegistry.Data
 
         // Receive a new Variable object, add it to the DbSet and
         // save changes to the database.
-        Task AddVariableAsync(VariableDTO variableDTO);
+        Task AddVariableAsync(VariablePostDTO variablePostDTO);
 
         // Search the Variable collection for an instance with the 
         // given identifier. Remove the Variable object if found, otherwise

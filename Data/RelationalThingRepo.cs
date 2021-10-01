@@ -66,16 +66,17 @@ namespace DeviceRegistry.Data
                 throw new KeyNotFoundException("No Thing with given identifier found.");
 
             var variables = await _context.Variables
-                .Select(v => _mapper.Map<VariableDTO>(v))
                 .Where(v => v.ThingId == identifier)
+                .Select(v => _mapper.Map<VariableDTO>(v))
                 .ToListAsync();
 
             return variables;
         }
 
-        async Task IThingService.AddVariableAsync(VariableDTO variableDTO)
+        async Task IThingService.AddVariableAsync(VariablePostDTO variablePostDTO)
         {
-            var variable = _mapper.Map<Variable>(variableDTO);
+            var variable = _mapper.Map<Variable>(variablePostDTO);
+            variable.VariableId = Guid.NewGuid();
             _context.Variables.Add(variable);
             await _context.SaveChangesAsync();
         }

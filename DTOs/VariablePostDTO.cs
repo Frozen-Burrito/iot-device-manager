@@ -5,10 +5,8 @@ using DeviceRegistry.Models;
 
 namespace DeviceRegistry.DTOs
 {
-    public class VariableDTO
+    public class VariablePostDTO
     {
-        public Guid VariableId { get; set; }
-
         [Required]
         public string ThingId { get; set; }
 

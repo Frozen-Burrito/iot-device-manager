@@ -11,6 +11,12 @@ namespace DeviceRegistry.Helpers
             CreateMap<Thing, ThingDTO>();
 
             CreateMap<ThingDTO, Thing>();
+
+            CreateMap<Variable, VariableDTO>();
+
+            CreateMap<VariablePostDTO, Variable>();
+
+            CreateMap<VariableDTO, Variable>();
         }
     }
 }
