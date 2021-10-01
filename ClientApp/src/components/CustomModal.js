@@ -27,11 +27,15 @@ export class CustomModal extends Component {
     } = this.props;
 
     return (
-      <Modal show={show} onHide={ this.handleClose }>
+      <Modal show={show} onHide={ this.handleClose } centered>
         <Modal.Header closeButton>
           <Modal.Title>{ data.title }</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{ data.body }</Modal.Body>
+        <Modal.Body>
+          { data.body }
+
+          { this.props.children ? this.props.children : '' }
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={ this.handleClose }>
             Close

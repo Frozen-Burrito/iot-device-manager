@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Row, Col, Stack, Badge, Button, Container } from 'react-bootstrap';
+import { Row, Col, Stack, Badge, Button, Container, Tabs, Tab, Spinner, ListGroup } from 'react-bootstrap';
 
 import { CustomModal } from '../components/CustomModal';
+import { NewVarForm } from '../components/NewVarForm';
 
 export class DeviceDetails extends Component {
 	static displayName = DeviceDetails.name;
@@ -11,19 +12,32 @@ export class DeviceDetails extends Component {
 		super(props);
 		this.state = {
 			thing: {},
+			variables: [],
+			newVariable: {
+				name: '',
+				type: 0,
+			},
 			showDeleteModal: false,
+			showNewVarModal: false,
 			loading: true,
 			error: null
 		}
 
 		this.renderThingDetails = this.renderThingDetails.bind(this);
+
 		this.handleDeleteModalDisplay = this.handleDeleteModalDisplay.bind(this);
 		this.handleDeleteModalAccept = this.handleDeleteModalAccept.bind(this);
+
+		this.handleNewVarModalDisplay = this.handleNewVarModalDisplay.bind(this);
+		this.handleNewVarModalConfirm = this.handleNewVarModalConfirm.bind(this);
+
+		this.handleVariableFormChange = this.handleVariableFormChange.bind(this);
 	}
 
 	componentDidMount() {
 		const { identifier } = this.props.match.params;
 		this.getThingDetails(identifier);
+		this.getThingVariables(identifier);
 	}
 
 	async getThingDetails(deviceIdentifier) {
@@ -35,6 +49,25 @@ export class DeviceDetails extends Component {
 			console.log(response);
 			this.setState({
 				thing: response.data,
+				loading: false
+			});
+
+		} catch (e) {
+			this.setState({
+				error: e.Message
+			});
+		}
+	}
+
+	async getThingVariables(thingIdentifier) {
+		try {
+			if (!thingIdentifier || thingIdentifier === '')
+				throw new Error('No device identifier provided.');
+
+			const response = await axios.get(`api/variables/from/${thingIdentifier}`);
+			console.log(response);
+			this.setState({
+				variables: response.data,
 				loading: false
 			});
 
@@ -89,10 +122,35 @@ export class DeviceDetails extends Component {
 						</Button>
 					</Stack>
 				</Col>
-
-				<hr/>
 			</Row>
 		);
+	}
+
+	renderThingVariables() {
+		const { variables } = this.state;
+
+		const variablesSection = variables.length > 0 ? (
+			<ListGroup variant="flush">
+				{ variables.map(v => 
+					<ListGroup.Item>
+						{v.name}
+					</ListGroup.Item>
+				)}
+			</ListGroup>
+		) : (
+			<>
+				<i className="bi bi-thermometer-half fs-2"></i>
+				<p className="fs-5">No variables yet!</p>
+
+				<Button 
+					variant="primary"
+					onClick={() => this.handleNewVarModalDisplay(true)}>
+					Add a Variable
+				</Button>
+			</>
+		);
+
+		return variablesSection;
 	}
 
 	handleDeleteModalDisplay(show) {
@@ -116,9 +174,57 @@ export class DeviceDetails extends Component {
 		}
 	}
 
+	handleNewVarModalDisplay(show) {
+		this.setState((state, _) => ({
+			showNewVarModal: show
+		}));
+	}
+
+	async handleNewVarModalConfirm() 
+	{
+		console.log('Adding a new variable...');
+		const { thing: { identifier}, newVariable } = this.state;
+
+		const variableData = {
+			ThingId: identifier,
+			Name: newVariable.name,
+			Type: Number(newVariable.type)
+		}
+
+		try {
+			console.log(variableData);
+
+			await axios.post('api/variables', variableData);
+
+			this.setState({
+				newVariable: {
+					name: '',
+					type: 0
+				}
+			});
+
+			this.handleNewVarModalDisplay(false);
+
+		} catch (error) {
+			console.log('Can\'t delete, an error was raised: ', error);
+		}
+	}
+
+	handleVariableFormChange(key, value) {
+		this.setState((state, _) => ({
+			newVariable: {
+				...state.newVariable,
+				[key]: value
+			}
+		}));
+	}
+
 	render() {
 
-		const { loading, showDeleteModal } = this.state;
+		const { 
+			loading, 
+			showDeleteModal, 
+			showNewVarModal } = this.state;
 
 		const deleteModalData = {
 			title: `Remove ${this.state.thing.name}?`,
@@ -127,29 +233,56 @@ export class DeviceDetails extends Component {
 			actionColor: 'danger',
 		}
 
+		const newVarModalData = {
+			title: 'New Variable',
+			body: 'Assign a new variable to this device.',
+			action: 'Save',
+			actionColor: 'primary',
+		}
+
 		let thingDetails = loading 
 			? <h1>Loading</h1>
 			: this.renderThingDetails();
+
+		let thingVariablesList = loading 
+			? <Spinner variant="black" />
+			: this.renderThingVariables(); 
 
 		return (
 			<Container>
 				<div className="mt-4">
 					{ thingDetails }
 
-					<div>
-						<h3>Data</h3>
+					<Tabs defaultActiveKey="data" id="device-tabs" className="my-3">
+						<Tab eventKey="data" title="Data">
+							<div className="text-center my-5">
+								<i className="bi bi-cloud-lightning fs-2"></i>
+								<p className="fs-5">There is no data available right now.</p>
+							</div>
+						</Tab>
 
-						<div className="text-center my-5">
-							<i className="bi bi-cloud-lightning fs-2"></i>
-							<p className="fs-5">There is no data available right now.</p>
-						</div>
-					</div>
+						<Tab eventKey="variables" title="Variables">
+							<div className="text-center my-5">
+								{ thingVariablesList }
+							</div>
+						</Tab>
+					</Tabs>
 
 					<CustomModal 
 						show={ showDeleteModal } 
 						data={ deleteModalData } 
 						onAcceptModal={ this.handleDeleteModalAccept } 
 						onCloseModal={ () => this.handleDeleteModalDisplay(false) }/>
+
+					<CustomModal 
+						show={ showNewVarModal } 
+						data={ newVarModalData } 
+						onAcceptModal={ this.handleNewVarModalConfirm } 
+						onCloseModal={ () => this.handleNewVarModalDisplay(false) }>
+							<NewVarForm 
+								onFormChange={ this.handleVariableFormChange } 
+								value={ this.state.newVariable }/>
+					</CustomModal>
 				</div>
 			</Container>
 		);
