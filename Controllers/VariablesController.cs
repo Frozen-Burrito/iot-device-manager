@@ -87,7 +87,7 @@ namespace DeviceRegistry.Controllers
         // given varId and then deletes it. Returns a 404 Not Found 
         // if no such Variable exists.
         /// <include file='../Docs/Controllers/ThingsController.xml' path='/doc/members/member[@name="M:DeviceRegistry.Controllers.ThingsController.DeleteThing(string identifier)"]/*'/>
-        [HttpDelete("{identifier}")]
+        [HttpDelete("{varId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteVariable(Guid varId)
